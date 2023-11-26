@@ -209,7 +209,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     collectionView.delegate = self;
     collectionView.internalDelegate = self;
     collectionView.backgroundColor = [UIColor clearColor];
-    collectionView.pagingEnabled = YES;
+    collectionView.pagingEnabled = NO;
     collectionView.showsHorizontalScrollIndicator = NO;
     collectionView.showsVerticalScrollIndicator = NO;
     collectionView.allowsMultipleSelection = NO;
@@ -492,6 +492,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     [self enqueueSelectedDate:selectedDate];
     [self.delegateProxy calendar:self didSelectDate:selectedDate atMonthPosition:monthPosition];
     [self selectCounterpartDate:selectedDate];
+    [self.collectionView selectItemAtIndexPath:indexPath animated:true scrollPosition:UICollectionViewScrollPositionCenteredHorizontally];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -1155,7 +1156,16 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
                 break;
             }
             case UICollectionViewScrollDirectionHorizontal: {
-                [_collectionView setContentOffset:CGPointMake(scrollOffset * _collectionView.fs_width, 0) animated:animated];
+                NSInteger item = (([self.gregorian component:NSCalendarUnitWeekday fromDate:date] - self.gregorian.firstWeekday) + 7) % 7;
+                NSInteger padding = 0;
+                if (item == 4) {
+                    padding = 0;
+                } else if (item < 4) {
+                    padding = - item * _collectionView.fs_width/7;
+                } else {
+                    padding = (4 - item) * _collectionView.fs_width/7;
+                }
+                [_collectionView setContentOffset:CGPointMake(scrollOffset * _collectionView.fs_width + padding, 0) animated:animated];
                 break;
             }
         }
@@ -1325,7 +1335,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
             [_deliver removeFromSuperview];
         }
         
-        _collectionView.pagingEnabled = YES;
+        _collectionView.pagingEnabled = NO;
         _collectionViewLayout.scrollDirection = (UICollectionViewScrollDirection)self.scrollDirection;
         
     } else {
