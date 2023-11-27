@@ -492,7 +492,9 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     [self enqueueSelectedDate:selectedDate];
     [self.delegateProxy calendar:self didSelectDate:selectedDate atMonthPosition:monthPosition];
     [self selectCounterpartDate:selectedDate];
-    [self.collectionView selectItemAtIndexPath:indexPath animated:true scrollPosition:UICollectionViewScrollPositionCenteredHorizontally];
+    if (self.scope == FSCalendarScopeWeek) {
+        [self.collectionView selectItemAtIndexPath:indexPath animated:true scrollPosition:UICollectionViewScrollPositionCenteredHorizontally];
+    }
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
