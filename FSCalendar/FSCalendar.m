@@ -1152,15 +1152,9 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
                 break;
             }
             case UICollectionViewScrollDirectionHorizontal: {
-                NSInteger item = (([self.gregorian component:NSCalendarUnitWeekday fromDate:date] - self.gregorian.firstWeekday) + 7) % 7;
+                NSInteger item = (([self.gregorian component:NSCalendarUnitWeekday fromDate:date] - self.gregorian.firstWeekday) + 7) % 7 + 1;
                 NSInteger padding = 0;
-                if (item == 4) {
-                    padding = 0;
-                } else if (item < 4) {
-                    padding = - item * _collectionView.fs_width/7;
-                } else {
-                    padding = (4 - item) * _collectionView.fs_width/7;
-                }
+                padding = (item - 4) * _collectionView.fs_width/7;
                 [_collectionView setContentOffset:CGPointMake(scrollOffset * _collectionView.fs_width + padding, 0) animated:animated];
                 break;
             }
