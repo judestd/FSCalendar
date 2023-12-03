@@ -1201,7 +1201,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
             }
             [self didChangeValueForKey:@"currentPage"];
         }
-        [self scrollToDate:_currentPage animated:animated];
+        [self scrollToDate:[NSDate date] animated:animated];
     } else {
         [self scrollToDate:[self.gregorian fs_firstDayOfMonth:date] animated:animated];
     }
